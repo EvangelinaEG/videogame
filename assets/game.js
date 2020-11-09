@@ -18,6 +18,33 @@ window.requestAnimationFrame = (function () {
         };
 }());
 
+function repaint() {
+    window.requestAnimationFrame(repaint)
+    paint(ctx);
+}
+
+function run() {
+    setTimeout(run, 50);  
+
+    var now = Date.now(),
+    deltaTime = (now - lastUpdate) / 1000;
+    if (deltaTime > 1) {
+        deltaTime = 0;
+    }
+    lastUpdate = now;
+
+    frames += 1;
+    acumDelta += deltaTime;
+    if (acumDelta > 1) {
+        FPS = frames;
+        frames = 0;
+        acumDelta -= 1;
+    }
+
+    act(deltaTime);
+    /*act();*/
+}
+
 function paint(ctx) {
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -29,15 +56,24 @@ function paint(ctx) {
     ctx.fillText('FPS: ' + FPS, 10, 10);
 }
 
-function act() {
+/* function act() {
     x += 2;
     if (x > canvas.width) {
         x = 0;
     }
-}
+} */
 
-function run() {
-    window.requestAnimationFrame(run);
+function act(deltaTime) {
+    x += 120 * deltaTime;
+    if (x > canvas.width) {
+        x = 0;
+    }
+}
+/* function run() {
+    setTimeout( function () {
+        window.requestAnimationFrame(run)
+    }, 50);
+    //window.requestAnimationFrame(run);
 
     var now = Date.now(),
         deltaTime = (now - lastUpdate) / 1000;
@@ -56,12 +92,13 @@ function run() {
 
     act();
     paint(ctx);
-}
+} */
 
 function init() {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
     run();
+    repaint();
 }
 
 window.addEventListener('load', init, false);
