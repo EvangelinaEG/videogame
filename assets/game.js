@@ -1,12 +1,12 @@
 (function (window, undefined) {
     'use strict';
-    var KEY_ENTER = 13,
+    const KEY_ENTER = 13,
         KEY_LEFT = 37,
         KEY_UP = 38,
         KEY_RIGHT = 39,
-        KEY_DOWN = 40,
+        KEY_DOWN = 40;
         
-        canvas = null,
+    let canvas = null,
         ctx = null,
         lastPress = null,
         pause = false,
@@ -18,6 +18,7 @@
         highscoresScene = null,
         body = [],
         food = null,
+        bonus = null,
         //var wall = [],
         highscores = [],
         posHighscore = 10,
@@ -25,6 +26,7 @@
         score = 0,
         iBody = new Image(),
         iFood = new Image(),
+        iBonus = new Image(),
         aEat = new Audio(),
         aDie = new Audio();
 
@@ -142,12 +144,13 @@
         // Load assets
         iBody.src = 'assets/img/body.png';
         iFood.src = 'assets/img/fruit.png';
+        iBonus.src = 'assets/img/pine.png';
         aEat.src = 'assets/sound/chomp.m4a';
         aDie.src = 'assets/sound/dies.m4a';
 
         // Create food
         food = new Rectangle(80, 80, 10, 10);
-
+        bonus = new Rectangle(80, 80, 10, 10);
         // Create walls
         //wall.push(new Rectangle(50, 50, 10, 10));
         //wall.push(new Rectangle(50, 100, 10, 10));
@@ -199,6 +202,13 @@
         body.push(new Rectangle(0, 0, 10, 10));
         food.x = random(canvas.width / 10 - 1) * 10;
         food.y = random(canvas.height / 10 - 1) * 10;
+        
+        bonus.x = random(canvas.width / 10 - 1) * 10;
+        bonus.y = random(canvas.height / 10 - 1) * 10;
+        while(food.x === bonus.x && food.y === bonus.y){
+            bonus.x = random(canvas.width / 10 - 1) * 10;
+            bonus.y = random(canvas.height / 10 - 1) * 10;
+        }
         gameover = false;
     };
 
@@ -224,7 +234,10 @@
         
         // Draw food
         ctx.strokeStyle = '#f00';
+        
         food.drawImage(ctx, iFood);
+        ctx.strokeStyle = '#ff0';
+        bonus.drawImage(ctx, iBonus);
 
         // Draw score
         ctx.fillStyle = '#fff';
@@ -309,6 +322,24 @@
                 score += 1;
                 food.x = random(canvas.width / 10 - 1) * 10;
                 food.y = random(canvas.height / 10 - 1) * 10;
+                aEat.play();
+            }
+
+            // Bonus Intersects
+            if (body[0].intersects(bonus)) {
+                body.push(new Rectangle(0, 0, 10, 10));
+                score += 10;
+                bonus.x = random(canvas.width / 10 - 1) * 10;
+                bonus.y = random(canvas.height / 10 - 1) * 10;
+                while(food.x === bonus.x && food.y === bonus.y){
+                bonus.x = random(canvas.width / 10 - 1) * 10;
+                bonus.y = random(canvas.height / 10 - 1) * 10;
+                }
+                fetch('https://jsonplaceholder.typicode.com/?score='+score)
+                .then(response => response.json())
+                .then(json => console.log(json))
+                .then(() => console.log('Score has been sent'))
+                .catch(() => console.log('Something went wrong'))
                 aEat.play();
             }
 
