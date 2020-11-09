@@ -375,6 +375,16 @@
                 aEat.play();
             }
 
+            // Body Intersects
+            for (i = 2, l = body.length; i < l; i += 1) {
+                if (body[0].intersects(body[i])) {
+                    gameover = true;
+                    pause = true;
+                    aDie.play();
+                    addHighscore(score);
+                }
+            }
+
             // Wall Intersects
             for (i = 0, l = wall.length; i < l; i += 1) {
                 if (food.intersects(wall[i])) {
@@ -390,16 +400,6 @@
                 }
             }
 
-
-            // Body Intersects
-            for (i = 2, l = body.length; i < l; i += 1) {
-                if (body[0].intersects(body[i])) {
-                    gameover = true;
-                    pause = true;
-                    aDie.play();
-                    addHighscore(score);
-                }
-            }
         }
         // Pause/Unpause
         if (lastPress === KEY_ENTER) {
