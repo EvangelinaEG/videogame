@@ -385,6 +385,8 @@
                 if (body[0].intersects(wall[i])) {
                     gameover = true;
                     pause = true;
+                    aDie.play();
+                    addHighscore(score);
                 }
             }
 
