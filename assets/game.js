@@ -151,12 +151,7 @@
         // Create food
         food = new Rectangle(80, 80, 10, 10);
         bonus = new Rectangle(80, 80, 10, 10);
-        // Create walls
-        //wall.push(new Rectangle(50, 50, 10, 10));
-        //wall.push(new Rectangle(50, 100, 10, 10));
-        //wall.push(new Rectangle(100, 50, 10, 10));
-        //wall.push(new Rectangle(100, 100, 10, 10));
-
+       
         // Load saved highscores
         if (localStorage.highscores) {
             highscores = localStorage.highscores.split(',');
@@ -225,13 +220,7 @@
         for (i = 0, l = body.length; i < l; i += 1) {
             body[i].drawImage(ctx, iBody);
         }
-        
-        // Draw walls
-        //ctx.fillStyle = '#999';
-        //for (i = 0, l = wall.length; i < l; i += 1) {
-        //    wall[i].fill(ctx);
-        //}
-        
+                  
         // Draw food
         ctx.strokeStyle = '#f00';
         
@@ -243,9 +232,6 @@
         ctx.fillStyle = '#fff';
         ctx.textAlign = 'left';
         ctx.fillText('Score: ' + score, 0, 10);
-        
-        // Debug last key pressed
-        //ctx.fillText('Last Press: '+lastPress,0,20);
         
         // Draw pause
         if (pause) {
@@ -343,19 +329,7 @@
                 aEat.play();
             }
 
-            // Wall Intersects
-            //for (i = 0, l = wall.length; i < l; i += 1) {
-            //    if (food.intersects(wall[i])) {
-            //        food.x = random(canvas.width / 10 - 1) * 10;
-            //        food.y = random(canvas.height / 10 - 1) * 10;
-            //    }
-            //
-            //    if (body[0].intersects(wall[i])) {
-            //        gameover = true;
-            //        pause = true;
-            //    }
-            //}
-
+           
             // Body Intersects
             for (i = 2, l = body.length; i < l; i += 1) {
                 if (body[0].intersects(body[i])) {
