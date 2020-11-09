@@ -1,3 +1,13 @@
+function resize(){
+    let canvas = document.getElementById("canvas");
+    var w = window.innerWidth / canvas.width;
+    var h = window.innerHeight / canvas.height;
+    var scale = Math.min(h, w);
+
+    canvas.style.width = (canvas.width * scale) + 'px';
+    canvas.style.height = (canvas.height * scale) + 'px';
+}
+window.addEventListener('resize', resize, false);
 /* RequestAnimationFrame */
 'use strict';
 var canvas = null,
