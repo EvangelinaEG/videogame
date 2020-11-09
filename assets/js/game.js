@@ -50,34 +50,7 @@
         lastPress = evt.which;
     }, false);
     
-    function Rectangle(x, y, width, height) {
-        this.x = (x === undefined) ? 0 : x;
-        this.y = (y === undefined) ? 0 : y;
-        this.width = (width === undefined) ? 0 : width;
-        this.height = (height === undefined) ? this.width : height;
-
-        this.intersects = function (rect) {
-            if (rect == null) {
-                window.console.warn('Missing parameters on function intersects');
-            } else {
-                return (this.x < rect.x + rect.width &&
-                    this.x + this.width > rect.x &&
-                    this.y < rect.y + rect.height &&
-                    this.y + this.height > rect.y);
-            }
-        };
-    
-        this.fill = function (ctx) {
-            if (ctx == null) {
-                window.console.warn('Missing parameters on function fill');
-            } else {
-                ctx.fillRect(this.x, this.y, this.width, this.height);
-            }
-        };
-    }
-
-
-    
+       
     Rectangle.prototype = {
         constructor: Rectangle,
         
@@ -113,17 +86,46 @@
         }
     };
 
-    function Scene() {
-        this.id = scenes.length;
-        scenes.push(this);
-    }
-
     Scene.prototype = {
         constructor: Scene,
         load: function () {},
         paint: function (ctx) {},
         act: function () {}
     };
+
+    // functions
+    
+
+    function Rectangle(x, y, width, height) {
+        this.x = (x === undefined) ? 0 : x;
+        this.y = (y === undefined) ? 0 : y;
+        this.width = (width === undefined) ? 0 : width;
+        this.height = (height === undefined) ? this.width : height;
+
+        this.intersects = function (rect) {
+            if (rect == null) {
+                window.console.warn('Missing parameters on function intersects');
+            } else {
+                return (this.x < rect.x + rect.width &&
+                    this.x + this.width > rect.x &&
+                    this.y < rect.y + rect.height &&
+                    this.y + this.height > rect.y);
+            }
+        };
+    
+        this.fill = function (ctx) {
+            if (ctx == null) {
+                window.console.warn('Missing parameters on function fill');
+            } else {
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+        };
+    }
+
+    function Scene() {
+        this.id = scenes.length;
+        scenes.push(this);
+    }
 
     function loadScene(scene) {
         currentScene = scene.id;
@@ -194,6 +196,8 @@
         repaint();
     }
 
+    //Scenes
+    
     // Main Scene
     mainScene = new Scene();
 
