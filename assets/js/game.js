@@ -170,12 +170,11 @@
         // setTimeout(run, 50);
 		/*window.requestAnimationFrame(run);*/
         setTimeout(run, 160);
-        updateCountdown();
+
         // Refresh every second
         setInterval(updateCountdown, MILLISECONDS_OF_A_SECOND);
-    
-        
-
+        updateCountdown();
+       
         if (scenes.length) {
            scenes[currentScene].act();
         }
@@ -315,7 +314,7 @@
         ctx.fillText('Score: ' + score, 0, 10);
 
         ctx.fillStyle = '#ff0';
-        ctx.fillText('FPS: ' + FPS, 0, 20);
+        ctx.fillText('TIME: ' + FPS, 0, 20);
       
         
         // Draw pause
