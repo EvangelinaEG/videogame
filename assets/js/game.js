@@ -8,7 +8,7 @@
         
         
     let canvas = null,
-        now = 0,
+        FPS = 0,
         ctx = null,
         lastPress = null,
         pause = false,
@@ -18,6 +18,7 @@
         mainScene = null,
         gameScene = null,
         highscoresScene = null,
+        gameoverScene = null,
         body = [],
         food = null,
         bonus = null,
@@ -31,8 +32,18 @@
         iBonus = new Image(),
         aEat = new Audio(),
         aDie = new Audio();
-        var wall = new Array();
 
+        var wall = new Array();
+        let lastUpdate = 0;
+        const DATE_TARGET = new Date('04/13/2021 0:01 AM');
+  
+        // Milliseconds for the calculations
+        const MILLISECONDS_OF_A_SECOND = 1000;
+        const MILLISECONDS_OF_A_MINUTE = MILLISECONDS_OF_A_SECOND * 60;
+        const MILLISECONDS_OF_A_HOUR = MILLISECONDS_OF_A_MINUTE * 60;
+        const MILLISECONDS_OF_A_DAY = MILLISECONDS_OF_A_HOUR * 24;
+        
+     
     window.requestAnimationFrame = (function () {
         return window.requestAnimationFrame ||
             window.mozRequestAnimationFrame ||
@@ -157,13 +168,38 @@
 
     function run() {
         // setTimeout(run, 50);
-		//window.requestAnimationFrame(run);
-        setTimeout(run, 60);
+		/*window.requestAnimationFrame(run);*/
+        setTimeout(run, 160);
+        updateCountdown();
+        // Refresh every second
+        setInterval(updateCountdown, MILLISECONDS_OF_A_SECOND);
+    
+        
+
         if (scenes.length) {
-            scenes[currentScene].act();
+           scenes[currentScene].act();
         }
     }
    
+    function updateCountdown() {
+        // Calcs
+        const NOW = new Date()
+        const DURATION = DATE_TARGET - NOW;
+        const REMAINING_DAYS = Math.floor(DURATION / MILLISECONDS_OF_A_DAY);
+        const REMAINING_HOURS = Math.floor((DURATION % MILLISECONDS_OF_A_DAY) / MILLISECONDS_OF_A_HOUR);
+        const REMAINING_MINUTES = Math.floor((DURATION % MILLISECONDS_OF_A_HOUR) / MILLISECONDS_OF_A_MINUTE);
+        const REMAINING_SECONDS = Math.floor((DURATION % MILLISECONDS_OF_A_MINUTE) / MILLISECONDS_OF_A_SECOND);
+       
+
+        // Render
+    
+        FPS = REMAINING_SECONDS;
+    }
+
+    
+    updateCountdown();
+    // Refresh every second
+    setInterval(updateCountdown, MILLISECONDS_OF_A_SECOND);
     function init() {
         // Get canvas and context
         canvas = document.getElementById('canvas');
@@ -277,6 +313,9 @@
         ctx.fillStyle = '#0f0';
         ctx.textAlign = 'left';
         ctx.fillText('Score: ' + score, 0, 10);
+
+        ctx.fillStyle = '#ff0';
+        ctx.fillText('FPS: ' + FPS, 0, 20);
       
         
         // Draw pause
@@ -301,6 +340,17 @@
             // GameOver Reset
             if (gameover) {
                 loadScene(highscoresScene);
+            }
+
+            if (FPS === 0) {
+                gameover = true;
+                pause = true;
+                aDie.play();
+                addHighscore(score);
+                loadScene(gameoverScene);
+                loadScene(highscoresScene);
+                
+               
             }
 
             
@@ -447,6 +497,30 @@
         }
     };
 
+    // GameOver Scene
+    gameoverScene = new Scene();
+
+    gameoverScene.paint = function (ctx) {
+        // Clean canvas
+        ctx.fillStyle = '#030';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+                  
+        // Draw title
+        ctx.fillStyle = '#f00';
+        ctx.textAlign = 'center';
+        ctx.fillText('SNAKE', 150, 60);
+        ctx.fillText('GAME OVER', 150, 90);
+
+        
+    };
+    gameoverScene.act = function () {
+        // Load next scene
+        if (lastPress === KEY_ENTER) {
+            loadScene(highscoresScene);
+            lastPress = null;
+        }
+    };
    
     window.addEventListener('load', init, false);
 }(window));
